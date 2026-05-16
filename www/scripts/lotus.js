@@ -7,14 +7,12 @@
 
 const NS = "http://www.w3.org/2000/svg";
 
-// Vertical teardrop pointing UP from center (110, 110).
-// Rotated by --rot for each petal.
-const OUTER_PETAL = "M 110 110 C 84 88 84 46 110 22 C 136 46 136 88 110 110 Z";
-// Back petals (chuliya, lines 6-9) are LARGER than the 5 outer petals so
-// they form an enveloping outer ring behind the Panch Parmeshthi petals —
-// otherwise 4 of them feel "short" against 5 in front. Longer (tip y=6)
-// and wider (waist x=78/142) than the outer petals (y=22, x=84/136).
-const BACK_PETAL  = "M 110 110 C 78 86 78 32 110 6 C 142 32 142 86 110 110 Z";
+// Two concentric rings — different radii so they don't fight for gap space.
+// Inner ring: 5 PP petals (smaller, colourful, at 72° spacing).
+// Outer ring: 4 chuliya leaves (larger halo, at 90° spacing on the diagonals).
+// Both anchor at the center (110, 110) and extend UP; --rot positions them.
+const OUTER_PETAL = "M 110 110 C 90 96 90 58 110 44 C 130 58 130 96 110 110 Z";  // inner PP — shorter, narrower
+const BACK_PETAL  = "M 110 110 C 74 92 74 26 110 4 C 146 26 146 92 110 110 Z";   // outer halo leaf — long & broad
 
 // 5 outer petals (one per Panch Parmeshthi)
 // angle 0 = pointing UP (12 o'clock), then 72° clockwise each
@@ -26,12 +24,14 @@ const OUTER = [
   { line: 5, rot: 288, fill: "#283593", stroke: "#0D1454", strokeWidth: 1.5 }, // Sadhu - neel black
 ];
 
-// 4 back petals (chuliya) — between the outer petals, in cream-white with gold edge
+// 4 outer halo leaves (chuliya) — at diagonal positions, 90° apart, forming
+// a 4-fold halo behind the inner flower. They live on a larger radius so the
+// 5-vs-4 "missing wedge" problem disappears — they don't have to interlock.
 const BACK = [
-  { line: 6, rot: 36,  fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.5 },
-  { line: 7, rot: 108, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.5 },
-  { line: 8, rot: 180, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.5 },
-  { line: 9, rot: 252, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.5 },
+  { line: 6, rot: 45,  fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.6 },
+  { line: 7, rot: 135, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.6 },
+  { line: 8, rot: 225, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.6 },
+  { line: 9, rot: 315, fill: "#FFF8E1", stroke: "#B8973C", strokeWidth: 1.6 },
 ];
 
 export function linesLearnedFromCompleted(completedCount) {
