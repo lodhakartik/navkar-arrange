@@ -73,8 +73,14 @@ function renderIntroLotus() {
   const caption = $("lotus-caption");
   if (caption) {
     if (lines === 0) caption.textContent = "Bloom the Lotus";
-    else if (lines >= 9) caption.textContent = "Fully Bloomed ✦";
+    else if (lines >= 9 || progress.masteredOnce) caption.textContent = "Fully Bloomed ✦";
     else caption.textContent = `${lines} of 9 petals open`;
+  }
+  const startBtn = $("btn-start");
+  if (startBtn) {
+    if (progress.masteredOnce) startBtn.textContent = "Play Again";
+    else if (progress.currentLevel > 0) startBtn.textContent = "Continue";
+    else startBtn.textContent = "Begin";
   }
 }
 
@@ -85,9 +91,19 @@ function hideNativeSplash() {
 
 async function onStart() {
   await audio.unlock();
+  // If they've already completed the mantra once, starting again means a
+  // fresh re-bloom from L1 with the lotus deflated.
+  if (progress.masteredOnce) fullReset();
   const idx = clampLevel(progress.currentLevel);
   setScreen("puzzle");
   startLevel(idx, { onComplete: onLevelComplete });
+}
+
+function fullReset() {
+  progress.completed = [];
+  progress.masteredOnce = false;
+  progress.currentLevel = 0;
+  setProgress(progress);
 }
 
 function clampLevel(i) {
@@ -113,11 +129,15 @@ async function onLevelComplete(levelIndex) {
   const linesAfter  = linesLearnedFromCompleted(levelIndex + 1);
 
   if (isFinal) {
-    renderLotus($("final-lotus"), { linesLearned: linesBefore });
+    // Render all petals closed so the final screen shows a full,
+    // dramatic bloom of all 9 petals in order (1→9).
+    renderLotus($("final-lotus"), { linesLearned: 0 });
     setScreen("final");
-    setTimeout(() => animateBloomTo($("final-lotus").firstElementChild, linesAfter), 200);
+    setTimeout(() => animateBloomTo($("final-lotus").firstElementChild, 9), 300);
     bigCelebrate($("confetti-host-final"));
-    audio.playChant();
+    // Give the just-placed line-9 audio a moment to breathe before the
+    // full chant starts. playChant() itself stops any still-playing line.
+    setTimeout(() => audio.playChant(), 900);
   } else {
     $("win-subtitle").textContent = `Level ${levelIndex + 1} complete!`;
     renderLotus($("win-lotus"), { linesLearned: linesBefore });
@@ -133,9 +153,8 @@ function onNext() {
 }
 
 function onReplay() {
-  audio.stopChant();
-  progress.currentLevel = 0;
-  setProgress(progress);
+  audio.stopAll();
+  fullReset();
   setScreen("puzzle");
   startLevel(0, { onComplete: onLevelComplete });
 }

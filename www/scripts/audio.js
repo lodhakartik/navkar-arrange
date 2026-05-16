@@ -39,9 +39,28 @@ export async function unlock() {
   }
 }
 
+function pauseEl(a) {
+  if (!a || a.paused) return;
+  try { a.pause(); a.currentTime = 0; } catch {}
+}
+
+export function stopAllLines() {
+  for (const a of elements.values()) pauseEl(a);
+}
+
+export function stopAll() {
+  stopAllLines();
+  pauseEl(chantEl);
+}
+
 export function playLine(id) {
   const a = elements.get(id);
   if (!a) return;
+  // Prevent overlap: stop any other line + the chant before starting.
+  for (const [otherId, other] of elements) {
+    if (otherId !== id) pauseEl(other);
+  }
+  pauseEl(chantEl);
   try {
     a.currentTime = 0;
     a.play().catch(() => {});
@@ -50,6 +69,8 @@ export function playLine(id) {
 
 export function playChant({ loop = false } = {}) {
   if (!chantEl) return;
+  // Prevent overlap with any tile-tap line audio still playing.
+  stopAllLines();
   try {
     chantEl.loop = loop;
     chantEl.currentTime = 0;
@@ -58,6 +79,5 @@ export function playChant({ loop = false } = {}) {
 }
 
 export function stopChant() {
-  if (!chantEl) return;
-  try { chantEl.pause(); chantEl.currentTime = 0; } catch {}
+  pauseEl(chantEl);
 }

@@ -104,7 +104,11 @@ function handleDropAttempt(tile, slot) {
 
   placedCount++;
   if (placedCount >= lineCount) {
-    setTimeout(() => onLevelComplete && onLevelComplete(currentLevelIndex), 700);
+    // On the final level let line-9 audio breathe longer before the
+    // celebration takes over with the full chant.
+    const isFinal = currentLevelIndex === TOTAL_LEVELS - 1;
+    const delay = isFinal ? 1500 : 700;
+    setTimeout(() => onLevelComplete && onLevelComplete(currentLevelIndex), delay);
   }
   return "correct";
 }

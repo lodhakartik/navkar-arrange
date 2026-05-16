@@ -117,20 +117,21 @@ function makeCenter() {
 }
 
 // Animate any newly-blooming petals (those that should be open per `linesLearned`
-// but currently aren't). Returns the count of petals that animated.
+// but currently aren't). Petals bloom in line-number order (1→9) for a
+// meaningful progression. Returns the count of petals that animated.
 export function animateBloomTo(wrap, linesLearned) {
   if (!wrap) return 0;
-  let count = 0;
-  const petals = wrap.querySelectorAll(".petal");
-  petals.forEach((p) => {
-    const line = Number(p.dataset.line);
-    if (line <= linesLearned && !p.classList.contains("open")) {
-      setTimeout(() => p.classList.add("open"), 200 + count * 220);
-      count++;
-    }
+  const toBloom = Array.from(wrap.querySelectorAll(".petal"))
+    .filter((p) => {
+      const line = Number(p.dataset.line);
+      return line <= linesLearned && !p.classList.contains("open");
+    })
+    .sort((a, b) => Number(a.dataset.line) - Number(b.dataset.line));
+  toBloom.forEach((p, i) => {
+    setTimeout(() => p.classList.add("open"), 200 + i * 260);
   });
   if (linesLearned >= 9) {
-    setTimeout(() => wrap.classList.add("full"), 200 + count * 220 + 400);
+    setTimeout(() => wrap.classList.add("full"), 200 + toBloom.length * 260 + 500);
   }
-  return count;
+  return toBloom.length;
 }

@@ -275,13 +275,21 @@ body[data-screen="levels"] #screen-levels {
   aspect-ratio: 1;
   margin: 0 auto;
 }
+/* The final screen's lotus is the climax — make it noticeably larger. */
+#final-lotus.lotus-host {
+  width: min(360px, 82vw);
+}
 .lotus {
   width: 100%;
   height: 100%;
   position: relative;
   margin: 0 auto;
 }
-.lotus svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.lotus svg {
+  width: 100%; height: 100%; display: block; overflow: visible;
+  transform-origin: 50% 50%;
+  transition: transform 900ms cubic-bezier(.34, 1.56, .64, 1);
+}
 .lotus .petal {
   transform-origin: 110px 110px;
   transform: scale(0.10) rotate(var(--rot, 0deg));
@@ -305,6 +313,29 @@ body[data-screen="levels"] #screen-levels {
   opacity: 1;
   filter: drop-shadow(0 0 14px #FFD56B) drop-shadow(0 0 6px #FFF1AD);
   transform: scale(1.08);
+}
+
+/* Final celebration: gentle slow rotation + breathing pulse + radiant glow. */
+@keyframes lotus-slow-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes lotus-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+@keyframes lotus-center-glow {
+  0%, 100% { filter: drop-shadow(0 0 10px #FFD56B) drop-shadow(0 0 4px #FFF1AD); }
+  50%      { filter: drop-shadow(0 0 22px #FFD56B) drop-shadow(0 0 10px #FFF1AD); }
+}
+#screen-final .lotus.full {
+  animation: lotus-breathe 4s ease-in-out infinite;
+}
+#screen-final .lotus.full svg {
+  animation: lotus-slow-rotate 36s linear infinite;
+}
+#screen-final .lotus.full .center {
+  animation: lotus-center-glow 3s ease-in-out infinite;
 }
 .lotus-caption {
   display: block; text-align: center;
