@@ -301,7 +301,7 @@ body[data-screen="levels"] #screen-levels {
   opacity: 1;
 }
 .lotus .petal-back.open {
-  transform: scale(0.95) rotate(var(--rot, 0deg));
+  transform: scale(1) rotate(var(--rot, 0deg));
   opacity: 1;
 }
 .lotus .center {

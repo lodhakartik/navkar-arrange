@@ -10,9 +10,11 @@ const NS = "http://www.w3.org/2000/svg";
 // Vertical teardrop pointing UP from center (110, 110).
 // Rotated by --rot for each petal.
 const OUTER_PETAL = "M 110 110 C 84 88 84 46 110 22 C 136 46 136 88 110 110 Z";
-// Back petals are SHORTER than outer (so they sit inside the outer ring)
-// but WIDER (so they peek out between adjacent outer petals).
-const BACK_PETAL  = "M 110 110 C 86 92 86 58 110 40 C 134 58 134 92 110 110 Z";
+// Back petals (chuliya, lines 6-9) are LARGER than the 5 outer petals so
+// they form an enveloping outer ring behind the Panch Parmeshthi petals —
+// otherwise 4 of them feel "short" against 5 in front. Longer (tip y=6)
+// and wider (waist x=78/142) than the outer petals (y=22, x=84/136).
+const BACK_PETAL  = "M 110 110 C 78 86 78 32 110 6 C 142 32 142 86 110 110 Z";
 
 // 5 outer petals (one per Panch Parmeshthi)
 // angle 0 = pointing UP (12 o'clock), then 72° clockwise each
