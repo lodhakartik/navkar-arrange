@@ -8,12 +8,11 @@
 const NS = "http://www.w3.org/2000/svg";
 
 // Two concentric rings — different radii so they don't fight for gap space.
-// PP petals: BIG dominant flower (5 petals at 72° spacing) — the focus.
-// Chuliya: SMALL accent leaves (4 petals at 90° spacing on the diagonals)
-// peeking out from between adjacent PP petals.
+// Inner ring: 5 PP petals (smaller, colourful, at 72° spacing).
+// Outer ring: 4 chuliya leaves (larger halo, at 90° spacing on the diagonals).
 // Both anchor at the center (110, 110) and extend UP; --rot positions them.
-const OUTER_PETAL = "M 110 110 C 82 88 82 42 110 18 C 138 42 138 88 110 110 Z";  // PP — large, dominant
-const BACK_PETAL  = "M 110 110 C 92 96 92 64 110 50 C 128 64 128 96 110 110 Z";  // chuliya — small accent
+const OUTER_PETAL = "M 110 110 C 90 96 90 58 110 44 C 130 58 130 96 110 110 Z";  // inner PP — shorter, narrower
+const BACK_PETAL  = "M 110 110 C 74 92 74 26 110 4 C 146 26 146 92 110 110 Z";   // outer halo leaf — long & broad
 
 // 5 outer petals (one per Panch Parmeshthi)
 // angle 0 = pointing UP (12 o'clock), then 72° clockwise each
