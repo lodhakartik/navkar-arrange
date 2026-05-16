@@ -1,0 +1,352 @@
+html, body { height: 100%; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- screen toggle ----- */
+.screen { display: none; }
+body[data-screen="intro"]  #screen-intro,
+body[data-screen="puzzle"] #screen-puzzle,
+body[data-screen="win"]    #screen-win,
+body[data-screen="final"]  #screen-final,
+body[data-screen="levels"] #screen-levels {
+  display: flex;
+}
+.screen {
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+  position: relative;
+}
+
+/* ornate corner motifs on every screen ------------------------------- */
+.screen::before, .screen::after {
+  content: "";
+  position: absolute;
+  width: 80px; height: 80px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.screen::before {
+  top: max(env(safe-area-inset-top), 6px);
+  left: 6px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><g fill='none' stroke='%238C6A1F' stroke-width='1.5'><path d='M6 6 L40 6 M6 6 L6 40'/><path d='M10 10 Q24 14 30 22 Q24 28 14 26 Q10 22 10 10 Z' fill='%23C8A14B' fill-opacity='0.25'/><circle cx='14' cy='14' r='2.5' fill='%237A1D1D'/></g></svg>");
+}
+.screen::after {
+  top: max(env(safe-area-inset-top), 6px);
+  right: 6px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><g fill='none' stroke='%238C6A1F' stroke-width='1.5'><path d='M74 6 L40 6 M74 6 L74 40'/><path d='M70 10 Q56 14 50 22 Q56 28 66 26 Q70 22 70 10 Z' fill='%23C8A14B' fill-opacity='0.25'/><circle cx='66' cy='14' r='2.5' fill='%237A1D1D'/></g></svg>");
+}
+
+/* ----- intro ----- */
+#screen-intro { align-items: center; justify-content: center; text-align: center; gap: 18px; }
+.intro-title {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--maroon);
+  line-height: 1.15;
+}
+.intro-title .om {
+  display: block;
+  font-family: "Tiro Devanagari Sanskrit", "Yatra One", serif;
+  font-size: 72px;
+  color: var(--maroon-soft);
+  line-height: 1;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.4);
+}
+.intro-title .devanagari {
+  display: block;
+  font-family: "Yatra One", "Tiro Devanagari Sanskrit", "Sanskrit Text", serif;
+  font-size: 38px;
+  color: var(--maroon);
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+.intro-title .english {
+  display: block;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-top: 2px;
+}
+.intro-subtitle {
+  font-family: "Patrick Hand", "Caveat", cursive;
+  font-size: 20px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+  max-width: 320px;
+}
+
+/* ----- puzzle ----- */
+#screen-puzzle { padding-top: max(env(safe-area-inset-top), 8px); }
+.puzzle-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0 10px;
+  border-bottom: 2px solid var(--gold);
+  margin-bottom: 8px;
+  position: relative;
+}
+.puzzle-header::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -5px;
+  height: 1px; background: var(--gold-deep); opacity: 0.5;
+}
+.level-label {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 26px; font-weight: 700;
+  color: var(--maroon);
+  letter-spacing: 0.02em;
+}
+
+.slots {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 6px 0;
+  flex: 1 1 0; min-height: 0;
+  overflow-y: auto;
+}
+.slot {
+  display: flex; align-items: center;
+  min-height: 54px;
+  padding: 2px 8px 2px 2px;
+  background: var(--slot-empty);
+  border: 2px dashed var(--slot-border);
+  border-radius: var(--radius);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.slot.filled { border-style: solid; background: transparent; padding: 0; }
+.slot.correct-flash { background: var(--slot-correct); border-color: #5BBF8C; }
+.slot.drag-over {
+  background: rgba(232, 199, 110, 0.55);
+  border-color: var(--maroon-soft);
+  border-style: solid;
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(232, 199, 110, 0.5);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.slot-number {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-weight: 700; font-size: 22px;
+  color: var(--gold-deep);
+  background: rgba(255, 253, 240, 0.6);
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin: 4px;
+}
+.slot.filled .slot-number { display: none; }
+
+.pool {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 0 max(10px, env(safe-area-inset-bottom));
+  border-top: 2px dashed var(--gold);
+  /* Pool sizes to its content, capped so it can't squeeze the slots.
+     As tiles get placed and the pool shrinks, slots expand into the freed space. */
+  flex: 0 1 auto;
+  max-height: 50dvh;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 6px;
+  transition: padding 220ms ease, border-color 220ms ease;
+}
+.pool:empty {
+  padding: 0;
+  border-top-color: transparent;
+  margin-top: 0;
+}
+
+/* ----- tile ----- */
+.tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  min-height: 50px;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  border: 2px solid var(--gold);
+  background: var(--ch-bg);
+  color: var(--ch-fg);
+  box-shadow: var(--shadow-soft), inset 0 0 0 1px rgba(255,255,255,0.20);
+  touch-action: none;
+  cursor: grab;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+  flex: 0 0 auto;
+  max-width: 100%;
+  position: relative;
+}
+.tile-devanagari {
+  font-family: "Tiro Devanagari Sanskrit", "Sanskrit Text", "Devanagari Sangam MN", "Nirmala UI", "Mangal", serif;
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.15;
+}
+.tile-english {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-top: 1px;
+  opacity: 0.95;
+}
+.slot.filled .tile { flex: 1 1 100%; width: 100%; }
+
+/* Panch Parmeshthi colors (lines 1-5) */
+.tile[data-line="1"] { background: var(--pp-1-bg); color: var(--pp-1-fg); border-color: var(--pp-1-border); }
+.tile[data-line="2"] { background: var(--pp-2-bg); color: var(--pp-2-fg); border-color: var(--pp-2-border); }
+.tile[data-line="3"] { background: var(--pp-3-bg); color: var(--pp-3-fg); border-color: var(--pp-3-border); }
+.tile[data-line="4"] { background: var(--pp-4-bg); color: var(--pp-4-fg); border-color: var(--pp-4-border); }
+.tile[data-line="5"] { background: var(--pp-5-bg); color: var(--pp-5-fg); border-color: var(--pp-5-border); }
+/* Chuliya (lines 6-9) — uniform parchment */
+.tile[data-line="6"],
+.tile[data-line="7"],
+.tile[data-line="8"],
+.tile[data-line="9"] {
+  background: var(--ch-bg); color: var(--ch-fg); border-color: var(--ch-border);
+}
+
+.tile.dragging {
+  cursor: grabbing;
+  pointer-events: none;
+  opacity: 0.92;
+  box-shadow: 0 12px 28px rgba(58,31,14,0.35);
+  z-index: 10;
+  transition: none;
+}
+.tile.placed {
+  cursor: default;
+  box-shadow: var(--shadow-press), inset 0 0 0 1px rgba(255,255,255,0.20);
+}
+.tile.pop { animation: pop 250ms ease; }
+.tile.shake { animation: shake 360ms ease; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.10); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* ----- win / final ----- */
+#screen-win, #screen-final {
+  align-items: center; justify-content: center; text-align: center;
+  gap: 16px; position: relative;
+}
+.win-content {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px; position: relative; z-index: 2;
+}
+.win-title {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 44px; font-weight: 700;
+  color: var(--maroon);
+}
+.win-subtitle {
+  font-family: "Patrick Hand", "Caveat", cursive;
+  font-size: 22px;
+  color: var(--ink-soft);
+}
+.confetti-host {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* ----- lotus widget ----- */
+.lotus-host {
+  width: min(220px, 70vw);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.lotus {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+.lotus svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.lotus .petal {
+  transform-origin: 110px 110px;
+  transform: scale(0.10) rotate(var(--rot, 0deg));
+  opacity: 0;
+  transition: transform 800ms cubic-bezier(.34, 1.56, .64, 1), opacity 600ms ease;
+}
+.lotus .petal-outer.open {
+  transform: scale(1) rotate(var(--rot, 0deg));
+  opacity: 1;
+}
+.lotus .petal-back.open {
+  transform: scale(0.95) rotate(var(--rot, 0deg));
+  opacity: 1;
+}
+.lotus .center {
+  opacity: 0.85;
+  transform-origin: 110px 110px;
+  transition: opacity 700ms ease, filter 700ms ease, transform 700ms ease;
+}
+.lotus.full .center {
+  opacity: 1;
+  filter: drop-shadow(0 0 14px #FFD56B) drop-shadow(0 0 6px #FFF1AD);
+  transform: scale(1.08);
+}
+.lotus-caption {
+  display: block; text-align: center;
+  margin-top: 6px;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 22px;
+  color: var(--gold-deep);
+}
+
+/* ----- level select ----- */
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+}
+.level-card {
+  background: var(--parchment-light);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 18px 12px;
+  min-height: 88px;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 26px; font-weight: 700;
+  color: var(--maroon);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-press);
+}
+.level-card.locked { opacity: 0.4; }
+.level-card.completed { background: #DCEDC8; border-color: #5BBF8C; color: #2D5A38; }
+
+.parent-link {
+  display: inline-block;
+  margin: 20px auto 8px;
+  padding: 10px 18px;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 20px; font-weight: 700;
+  color: var(--maroon);
+  background: rgba(255, 253, 240, 0.7);
+  border: 2px dashed var(--gold);
+  border-radius: 999px;
+  text-decoration: none;
+  align-self: center;
+}
+.parent-link:active { background: rgba(122, 29, 29, 0.08); }

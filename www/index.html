@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#FFF8E7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Navkar Arrange</title>
+  <!-- Web-preview fonts (CDN). Native/offline falls back to local @font-face + system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&family=Tiro+Devanagari+Sanskrit&family=Yatra+One&display=swap" />
+  <link rel="stylesheet" href="styles/reset.css" />
+  <link rel="stylesheet" href="styles/theme.css" />
+  <link rel="stylesheet" href="styles/layout.css" />
+</head>
+<body data-screen="intro">
+
+  <!-- ============ INTRO ============ -->
+  <section id="screen-intro" class="screen">
+    <div class="intro-content">
+      <h1 class="intro-title">
+        <span class="om devanagari">ॐ</span>
+        <span class="devanagari">नवकार मंत्र</span>
+        <span class="english">Navkar Mantra</span>
+      </h1>
+      <div id="intro-lotus" class="lotus-host"></div>
+      <span class="lotus-caption" id="lotus-caption">Bloom the Lotus</span>
+      <p class="intro-subtitle">Arrange the sacred lines in the right order to make the lotus bloom!</p>
+      <button id="btn-start" class="big-button">Begin</button>
+    </div>
+  </section>
+
+  <!-- ============ PUZZLE ============ -->
+  <section id="screen-puzzle" class="screen">
+    <header class="puzzle-header">
+      <button id="btn-home" class="icon-button" aria-label="Home">🏠</button>
+      <h2 id="level-label" class="level-label">Level 1 of 8</h2>
+      <button id="btn-levels" class="icon-button" aria-label="Levels">▦</button>
+    </header>
+    <div class="slots" id="slots"></div>
+    <div class="pool" id="pool"></div>
+  </section>
+
+  <!-- ============ WIN ============ -->
+  <section id="screen-win" class="screen">
+    <div class="win-content">
+      <div class="confetti-host" id="confetti-host" aria-hidden="true"></div>
+      <h2 class="win-title">Wonderful!</h2>
+      <div id="win-lotus" class="lotus-host"></div>
+      <p class="win-subtitle" id="win-subtitle">Level 1 complete!</p>
+      <button id="btn-next" class="big-button">Next Level</button>
+    </div>
+  </section>
+
+  <!-- ============ FINAL WIN ============ -->
+  <section id="screen-final" class="screen">
+    <div class="win-content">
+      <div class="confetti-host" id="confetti-host-final" aria-hidden="true"></div>
+      <h2 class="win-title devanagari">सम्पूर्ण!</h2>
+      <div id="final-lotus" class="lotus-host"></div>
+      <p class="win-subtitle">You learned the whole Navkar Mantra!</p>
+      <button id="btn-replay" class="big-button">Play Again</button>
+    </div>
+  </section>
+
+  <!-- ============ LEVEL SELECT ============ -->
+  <section id="screen-levels" class="screen">
+    <header class="puzzle-header">
+      <button id="btn-levels-back" class="icon-button" aria-label="Back">◀</button>
+      <h2 class="level-label">Choose a Level</h2>
+      <span class="icon-button" aria-hidden="true"></span>
+    </header>
+    <div class="level-grid" id="level-grid"></div>
+    <a id="link-recorder" class="parent-link" href="recorder.html">🎙 Record your voice</a>
+  </section>
+
+  <!-- Audio pool — populated by audio.js at startup -->
+  <div id="audio-pool" hidden></div>
+
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>

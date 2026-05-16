@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Navkar Recorder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&family=Tiro+Devanagari+Sanskrit&family=Yatra+One&display=swap" />
+<style>
+  :root {
+    --bg: #FBF1D9; --ink: #3A1F0E; --maroon: #7A1D1D; --maroon-soft: #A23B2E;
+    --gold: #C8A14B; --gold-deep: #8C6A1F;
+    --pp-1:#FFFFFF;--pp-2:#E53935;--pp-3:#FFC107;--pp-4:#43A047;--pp-5:#283593;
+    --ch:#F5DE9A;
+  }
+  *,*::before,*::after { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Patrick Hand", system-ui, sans-serif;
+    font-size: 18px;
+  }
+  h1 {
+    font-family: "Caveat", cursive;
+    font-size: 38px; color: var(--maroon);
+    margin: 8px 0 4px;
+  }
+  .subtitle { color: var(--gold-deep); font-size: 17px; }
+  .status-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.5);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    margin: 12px 0 16px;
+    flex-wrap: wrap;
+  }
+  .status-bar strong { color: var(--maroon); }
+  .pick-btn, .download-btn, .help-btn {
+    font-family: "Caveat", cursive;
+    font-size: 22px; font-weight: 700;
+    padding: 8px 18px;
+    border: 2px solid var(--gold);
+    background: linear-gradient(180deg, var(--maroon-soft), var(--maroon));
+    color: #FFF6DA;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .help-btn { background: #fff; color: var(--maroon); }
+  .pick-btn:disabled { opacity: 0.5; cursor: default; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--ch);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative;
+    transition: box-shadow 0.2s ease;
+  }
+  .card.saved { box-shadow: 0 0 0 3px #5BBF8C; background: #E8F5E9; }
+  .card.recording { box-shadow: 0 0 0 3px var(--maroon-soft); }
+  .card[data-line="1"] { background: var(--pp-1); }
+  .card[data-line="2"] { background: var(--pp-2); color: #fff; }
+  .card[data-line="3"] { background: var(--pp-3); }
+  .card[data-line="4"] { background: var(--pp-4); color: #fff; }
+  .card[data-line="5"] { background: var(--pp-5); color: #fff; }
+  .card[data-line="chant"] { background: linear-gradient(135deg, var(--pp-1), var(--pp-3)); }
+
+  .card .num {
+    position: absolute; top: -10px; left: -10px;
+    width: 32px; height: 32px;
+    background: var(--maroon); color: #FFF6DA;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Caveat", cursive; font-weight: 700;
+    font-size: 18px;
+  }
+  .card.saved .num { background: #2E7D32; }
+  .card .dev {
+    font-family: "Tiro Devanagari Sanskrit", "Sanskrit Text", serif;
+    font-size: 26px; line-height: 1.2;
+    text-align: center;
+  }
+  .card .eng {
+    font-family: "Caveat", cursive;
+    font-size: 22px; font-weight: 700;
+    text-align: center; opacity: 0.92;
+  }
+  .controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .controls button {
+    font-family: "Patrick Hand", sans-serif;
+    font-size: 17px;
+    padding: 8px 14px;
+    border: 2px solid currentColor;
+    background: rgba(255,255,255,0.85);
+    color: var(--maroon);
+    border-radius: 999px;
+    cursor: pointer;
+    min-height: 40px;
+  }
+  .controls button.primary {
+    background: var(--maroon); color: #FFF6DA; border-color: var(--gold);
+  }
+  .controls button.danger {
+    background: #d32f2f; color: #fff; border-color: #fff;
+  }
+  .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .preview { width: 100%; }
+  .preview audio { width: 100%; display: block; }
+  .timer { font-family: "Caveat", cursive; font-size: 24px; text-align: center; min-height: 30px; }
+  .hint { text-align: center; font-size: 14px; opacity: 0.75; }
+
+  details { margin: 16px 0; }
+  summary { cursor: pointer; font-weight: 700; color: var(--maroon); font-size: 18px; }
+  details pre {
+    background: #fff; border: 1px solid var(--gold); border-radius: 8px;
+    padding: 12px; font-size: 14px; overflow-x: auto;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<h1>🎙 Navkar Mantra Recorder</h1>
+<p class="subtitle">Record each line clearly. Files save to your chosen folder.</p>
+
+<div class="status-bar">
+  <button id="pick-folder" class="pick-btn">📁 Choose audio folder</button>
+  <button id="show-help" class="help-btn">How to use</button>
+  <span id="folder-status">No folder selected</span>
+  <span style="flex:1"></span>
+  <span><strong id="saved-count">0</strong> / 10 recorded</span>
+</div>
+
+<details id="help-panel">
+  <summary>Step-by-step instructions</summary>
+  <pre>
+1. Click "Choose audio folder" and select:
+   /Users/ayushlodha/Kartik_Youtube_Videos/jain_games/arrange_navkar_mantra/www/assets/audio
+   (Browser will ask for permission to read/write — click "Save changes" / "Allow")
+
+2. For each line card:
+   - Click 🎙 Record
+   - Browser asks for microphone permission — Allow
+   - Recite the line clearly
+   - Click ⏹ Stop
+   - Click ▶ in the preview to listen
+   - If happy: click 💾 Save → writes line-N.webm to the folder
+   - If not: click 🔄 Re-record and try again
+
+3. Repeat for all 9 lines (and optionally the full chant).
+   The chant card is optional — the conversion script will build it from your 9 lines automatically.
+
+4. When done, open Terminal and run:
+   bash /Users/ayushlodha/Kartik_Youtube_Videos/jain_games/arrange_navkar_mantra/tools/convert-recordings.sh
+
+5. Refresh the puzzle at http://localhost:8000/ — your voice now plays on each tile.
+
+Tips: speak from a quiet room. Pause ~0.5s before pressing Stop so endings don't get clipped.
+  </pre>
+</details>
+
+<div id="grid" class="grid"></div>
+
+<script>
+const LINES = [
+  { id: 1, dev: "णमो अरिहंताणं",       eng: "Namo Arihantanam" },
+  { id: 2, dev: "णमो सिद्धाणं",         eng: "Namo Siddhanam" },
+  { id: 3, dev: "णमो आयरियाणं",        eng: "Namo Ayariyanam" },
+  { id: 4, dev: "णमो उवज्झायाणं",      eng: "Namo Uvajjhayanam" },
+  { id: 5, dev: "णमो लोए सव्वसाहूणं",   eng: "Namo Loe Savva Sahunam" },
+  { id: 6, dev: "एसो पंच णमोक्कारो",    eng: "Eso Panch Namokkaro" },
+  { id: 7, dev: "सव्व पावप्पणासणो",    eng: "Savva Pavappanasano" },
+  { id: 8, dev: "मंगलाणं च सव्वेसिं",   eng: "Mangalanam cha Savvesim" },
+  { id: 9, dev: "पढमं हवइ मंगलं",      eng: "Padhamam Havai Mangalam" },
+  { id: "chant", dev: "पूर्ण नवकार मंत्र", eng: "Full chant (optional — auto-built if skipped)" },
+];
+
+let folderHandle = null;
+let savedCount = 0;
+const $ = (id) => document.getElementById(id);
+
+const PICKER_OK = "showDirectoryPicker" in window;
+if (!PICKER_OK) {
+  $("pick-folder").textContent = "⚠️ Use Chrome / Edge (file system access required)";
+  $("pick-folder").disabled = true;
+}
+
+$("pick-folder").addEventListener("click", async () => {
+  try {
+    folderHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+    $("folder-status").innerHTML = `📂 <strong>${folderHandle.name}</strong> selected`;
+    $("pick-folder").textContent = "✓ Folder set";
+    $("pick-folder").disabled = true;
+  } catch (e) { /* user cancelled */ }
+});
+
+$("show-help").addEventListener("click", () => {
+  $("help-panel").open = !$("help-panel").open;
+});
+
+const grid = $("grid");
+for (const line of LINES) {
+  grid.appendChild(buildCard(line));
+}
+
+function buildCard(line) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.line = String(line.id);
+
+  const num = document.createElement("div");
+  num.className = "num";
+  num.textContent = line.id === "chant" ? "★" : String(line.id);
+
+  const dev = document.createElement("div");
+  dev.className = "dev";
+  dev.textContent = line.dev;
+
+  const eng = document.createElement("div");
+  eng.className = "eng";
+  eng.textContent = line.eng;
+
+  const timer = document.createElement("div");
+  timer.className = "timer";
+
+  const preview = document.createElement("div");
+  preview.className = "preview";
+
+  const controls = document.createElement("div");
+  controls.className = "controls";
+
+  const recordBtn = document.createElement("button");
+  recordBtn.className = "primary";
+  recordBtn.textContent = "🎙 Record";
+
+  const stopBtn = document.createElement("button");
+  stopBtn.className = "danger";
+  stopBtn.textContent = "⏹ Stop";
+  stopBtn.style.display = "none";
+
+  const saveBtn = document.createElement("button");
+  saveBtn.textContent = "💾 Save";
+  saveBtn.disabled = true;
+  saveBtn.style.display = "none";
+
+  const retryBtn = document.createElement("button");
+  retryBtn.textContent = "🔄 Re-record";
+  retryBtn.style.display = "none";
+
+  controls.append(recordBtn, stopBtn, saveBtn, retryBtn);
+
+  card.append(num, dev, eng, preview, timer, controls);
+
+  let mediaRecorder = null;
+  let chunks = [];
+  let blob = null;
+  let stream = null;
+  let timerInt = null;
+  let startTs = 0;
+  let extension = "webm";
+
+  function setStatus(s) {
+    card.classList.toggle("recording", s === "recording");
+    card.classList.toggle("saved", s === "saved");
+  }
+  function showButtons({ record, stop, save, retry }) {
+    recordBtn.style.display = record ? "" : "none";
+    stopBtn.style.display = stop ? "" : "none";
+    saveBtn.style.display = save ? "" : "none";
+    retryBtn.style.display = retry ? "" : "none";
+    recordBtn.disabled = !record;
+    stopBtn.disabled = !stop;
+    retryBtn.disabled = !retry;
+    // save stays disabled until a blob exists AND a folder is picked
+  }
+
+  recordBtn.addEventListener("click", async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 48000 },
+      });
+    } catch (e) {
+      alert("Microphone permission denied. Allow it and try again.");
+      return;
+    }
+    chunks = [];
+    blob = null;
+    preview.innerHTML = "";
+    // Prefer mp4/m4a if Safari, else webm/opus
+    let mime = "audio/webm;codecs=opus";
+    if (!MediaRecorder.isTypeSupported(mime)) {
+      mime = MediaRecorder.isTypeSupported("audio/mp4") ? "audio/mp4" : "";
+    }
+    extension = mime.includes("mp4") ? "m4a" : "webm";
+    mediaRecorder = new MediaRecorder(stream, mime ? { mimeType: mime } : {});
+    mediaRecorder.addEventListener("dataavailable", (e) => {
+      if (e.data && e.data.size > 0) chunks.push(e.data);
+    });
+    mediaRecorder.addEventListener("stop", () => {
+      blob = new Blob(chunks, { type: mime || "audio/webm" });
+      const url = URL.createObjectURL(blob);
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = url;
+      preview.innerHTML = "";
+      preview.appendChild(audio);
+      stream.getTracks().forEach((t) => t.stop());
+      stream = null;
+      clearInterval(timerInt);
+      const dur = ((Date.now() - startTs) / 1000).toFixed(1);
+      timer.textContent = `Recorded ${dur}s`;
+      showButtons({ record: false, stop: false, save: true, retry: true });
+      saveBtn.disabled = !folderHandle;
+      setStatus("ready");
+    });
+    startTs = Date.now();
+    mediaRecorder.start();
+    timer.textContent = "0.0s";
+    timerInt = setInterval(() => {
+      timer.textContent = ((Date.now() - startTs) / 1000).toFixed(1) + "s";
+    }, 100);
+    showButtons({ record: false, stop: true, save: false, retry: false });
+    setStatus("recording");
+  });
+
+  stopBtn.addEventListener("click", () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop();
+    }
+  });
+
+  retryBtn.addEventListener("click", () => {
+    blob = null;
+    preview.innerHTML = "";
+    timer.textContent = "";
+    showButtons({ record: true, stop: false, save: false, retry: false });
+    setStatus("idle");
+    card.classList.remove("saved");
+  });
+
+  saveBtn.addEventListener("click", async () => {
+    if (!folderHandle) {
+      alert("Pick the audio folder first.");
+      return;
+    }
+    if (!blob) return;
+    const wasUnsaved = !card.classList.contains("saved");
+    const baseName = line.id === "chant" ? "chant-full" : `line-${line.id}`;
+    const filename = `${baseName}.${extension}`;
+    try {
+      const fh = await folderHandle.getFileHandle(filename, { create: true });
+      const ws = await fh.createWritable();
+      await ws.write(blob);
+      await ws.close();
+      setStatus("saved");
+      timer.textContent = `✓ saved as ${filename}`;
+      showButtons({ record: false, stop: false, save: false, retry: true });
+      if (wasUnsaved) {
+        savedCount++;
+        $("saved-count").textContent = savedCount;
+      }
+    } catch (e) {
+      alert("Save failed: " + e.message);
+    }
+  });
+
+  return card;
+}
+</script>
+</body>
+</html>

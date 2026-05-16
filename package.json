@@ -1,0 +1,25 @@
+{
+  "name": "arrange-navkar-mantra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A children's puzzle app teaching the Jain Navkar Mantra by drag-to-order.",
+  "scripts": {
+    "serve": "python3 -m http.server 8000 --directory www",
+    "sync": "cap sync",
+    "ios": "cap sync ios && cap open ios",
+    "android": "cap sync android && cap open android",
+    "assets": "capacitor-assets generate"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/preferences": "^6.0.2",
+    "@capacitor/splash-screen": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}

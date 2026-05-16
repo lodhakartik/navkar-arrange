@@ -1,0 +1,112 @@
+:root {
+  /* parchment palette */
+  --parchment-light: #FBF1D9;
+  --parchment:       #F2E2B1;
+  --parchment-dark:  #E5CE8A;
+  --maroon:          #7A1D1D;
+  --maroon-soft:     #A23B2E;
+  --gold:            #C8A14B;
+  --gold-deep:       #8C6A1F;
+  --ink:             #3A1F0E;
+  --ink-soft:        #5C3A1F;
+
+  /* Panch Parmeshthi traditional colors — brightened for kids */
+  --pp-1-bg: #FFFFFF;   /* Arihant — pure white */
+  --pp-1-fg: #3A1F0E;
+  --pp-1-border: #C8A14B;
+
+  --pp-2-bg: #E53935;   /* Siddha — vibrant red */
+  --pp-2-fg: #FFFFFF;
+  --pp-2-border: #8E1A18;
+
+  --pp-3-bg: #FFC107;   /* Acharya — bright turmeric yellow */
+  --pp-3-fg: #3A1F0E;
+  --pp-3-border: #B27500;
+
+  --pp-4-bg: #43A047;   /* Upadhyay — bright emerald green */
+  --pp-4-fg: #FFFFFF;
+  --pp-4-border: #1B5E20;
+
+  --pp-5-bg: #283593;   /* Sadhu — royal neel indigo */
+  --pp-5-fg: #FFFFFF;
+  --pp-5-border: #0D1454;
+
+  /* chuliya — closing verses, parchment */
+  --ch-bg: #F5DE9A;
+  --ch-fg: #3A1F0E;
+  --ch-border: var(--gold-deep);
+
+  /* slot */
+  --slot-empty: rgba(245, 230, 200, 0.45);
+  --slot-border: var(--gold);
+  --slot-correct: #C9E4CA;
+
+  --shadow-soft: 0 2px 0 rgba(58, 31, 14, 0.10), 0 6px 18px rgba(58, 31, 14, 0.10);
+  --shadow-press: 0 1px 0 rgba(58, 31, 14, 0.10), 0 3px 8px rgba(58, 31, 14, 0.08);
+  --radius: 14px;
+}
+
+/* Fonts are loaded via Google Fonts CDN in index.html (web).
+ * For offline native, drop .ttf files into www/assets/fonts/ and re-add
+ * @font-face url() entries pointing to them. */
+
+body {
+  font-family: "Patrick Hand", "Caveat", "Comic Sans MS", "Marker Felt", system-ui, sans-serif;
+  font-weight: 400;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.35;
+
+  /* parchment background: aged-paper gradient + subtle noise */
+  background-color: var(--parchment-light);
+  background-image:
+    radial-gradient(ellipse at top, rgba(255,253,240,0.6) 0%, rgba(229,206,138,0.35) 80%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.6  0 0 0 0 0.45  0 0 0 0 0.2  0 0 0 0.08 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply;
+}
+
+/* The devanagari class — used wherever sanskrit script appears */
+.devanagari {
+  font-family: "Tiro Devanagari Sanskrit", "Sanskrit Text", "Devanagari Sangam MN", "Nirmala UI", "Mangal", serif;
+  font-weight: 400;
+}
+
+.big-button {
+  background: linear-gradient(180deg, var(--maroon-soft), var(--maroon));
+  color: #FFF6DA;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  padding: 14px 36px;
+  border: 2px solid var(--gold);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.15);
+  min-height: 60px;
+  min-width: 200px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.big-button:active {
+  transform: translateY(2px);
+  box-shadow: var(--shadow-press);
+}
+
+.icon-button {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  border-radius: 12px;
+  color: var(--maroon);
+}
+.icon-button:active { background: rgba(122, 29, 29, 0.10); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
