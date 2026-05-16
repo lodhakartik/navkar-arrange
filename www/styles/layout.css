@@ -345,6 +345,17 @@ body[data-screen="levels"] #screen-levels {
   color: var(--gold-deep);
 }
 
+.play-count {
+  margin-top: 14px;
+  font-family: "Patrick Hand", "Caveat", cursive;
+  font-size: 16px;
+  color: var(--gold-deep);
+  opacity: 0.85;
+  min-height: 1.2em;
+  text-align: center;
+}
+.play-count:empty { display: none; }
+
 /* ----- level select ----- */
 .level-grid {
   display: grid;

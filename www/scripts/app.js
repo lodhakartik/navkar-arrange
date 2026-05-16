@@ -6,6 +6,7 @@ import { getProgress, setProgress } from "./storage.js";
 import * as audio from "./audio.js";
 import { celebrate, bigCelebrate } from "./feedback.js";
 import { renderLotus, animateBloomTo, linesLearnedFromCompleted } from "./lotus.js";
+import { bumpPlayCount } from "./counter.js";
 
 const $ = (id) => document.getElementById(id);
 const setScreen = (name) => { document.body.dataset.screen = name; };
@@ -34,6 +35,7 @@ async function boot() {
   renderIntroLotus();
   setScreen("intro");
   hideNativeSplash();
+  showPlayCount();
 
   // Dev convenience: ?go=N starts at level N (1-indexed). Harmless in prod.
   // Optional &fill=K pre-places the first K tiles correctly (for layout preview).
@@ -82,6 +84,14 @@ function renderIntroLotus() {
     else if (progress.currentLevel > 0) startBtn.textContent = "Continue";
     else startBtn.textContent = "Begin";
   }
+}
+
+async function showPlayCount() {
+  const el = $("play-count");
+  if (!el) return;
+  const count = await bumpPlayCount();
+  if (!count) return;
+  el.textContent = `${count.toLocaleString()} children have played \u2728`;
 }
 
 function hideNativeSplash() {
