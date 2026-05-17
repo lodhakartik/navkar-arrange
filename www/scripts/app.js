@@ -89,9 +89,13 @@ function renderIntroLotus() {
 async function showPlayCount() {
   const el = $("play-count");
   if (!el) return;
+  el.textContent = "\uD83C\uDF38 \u2026";
   const count = await bumpPlayCount();
-  if (!count) return;
-  el.textContent = `${count.toLocaleString()} children have played \u2728`;
+  if (count == null) {
+    el.textContent = "\uD83C\uDF38 a new bloom";
+    return;
+  }
+  el.textContent = `\uD83C\uDF38 ${count.toLocaleString()} children have played`;
 }
 
 function hideNativeSplash() {

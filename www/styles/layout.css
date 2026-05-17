@@ -346,15 +346,21 @@ body[data-screen="levels"] #screen-levels {
 }
 
 .play-count {
-  margin-top: 14px;
+  display: inline-block;
+  align-self: center;
+  margin-top: 4px;
+  padding: 6px 14px;
   font-family: "Patrick Hand", "Caveat", cursive;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--gold-deep);
-  opacity: 0.85;
-  min-height: 1.2em;
+  background: rgba(255, 248, 225, 0.7);
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  min-width: 120px;
   text-align: center;
+  box-shadow: var(--shadow-press);
 }
-.play-count:empty { display: none; }
 
 /* ----- level select ----- */
 .level-grid {
