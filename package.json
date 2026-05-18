@@ -2,7 +2,7 @@
   "name": "arrange-navkar-mantra",
   "version": "0.1.0",
   "private": true,
-  "description": "My First Navkar — a children's puzzle app teaching the Jain Navkar Mantra by drag-to-order.",
+  "description": "Navkar Arrange — a children's puzzle app teaching the Jain Navkar Mantra by drag-to-order.",
   "scripts": {
     "serve": "python3 -m http.server 8000 --directory www",
     "sync": "cap sync",

@@ -10,6 +10,7 @@ const defaultProgress = () => ({
   currentLevel: 0,        // index into LEVELS
   completed: [],          // array of level indices completed
   masteredOnce: false,    // true after first completion of level 8
+  tourSeen: false,        // true once the onboarding tour has been dismissed
 });
 
 export async function getProgress() {

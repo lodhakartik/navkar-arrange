@@ -7,6 +7,7 @@ import * as audio from "./audio.js";
 import { celebrate, bigCelebrate } from "./feedback.js";
 import { renderLotus, animateBloomTo, linesLearnedFromCompleted } from "./lotus.js";
 import { bumpPlayCount } from "./counter.js";
+import { showTour } from "./tour.js";
 
 const $ = (id) => document.getElementById(id);
 const setScreen = (name) => { document.body.dataset.screen = name; };
@@ -23,6 +24,7 @@ async function boot() {
   $("btn-levels-back").addEventListener("click", () => setScreen("puzzle"));
   $("btn-next").addEventListener("click", onNext);
   $("btn-replay").addEventListener("click", onReplay);
+  $("btn-tour").addEventListener("click", () => showTour());
 
   // Dev convenience: ?bloom=N fakes "N lines learned" for the intro lotus.
   const bloomMatch = location.search.match(/[?&]bloom=(\d+)/);
@@ -36,6 +38,7 @@ async function boot() {
   setScreen("intro");
   hideNativeSplash();
   showPlayCount();
+  maybeShowFirstLaunchTour();
 
   // Dev convenience: ?go=N starts at level N (1-indexed). Harmless in prod.
   // Optional &fill=K pre-places the first K tiles correctly (for layout preview).
@@ -84,6 +87,16 @@ function renderIntroLotus() {
     else if (progress.currentLevel > 0) startBtn.textContent = "Continue";
     else startBtn.textContent = "Begin";
   }
+}
+
+function maybeShowFirstLaunchTour() {
+  if (progress.tourSeen) return;
+  showTour({
+    onComplete: async () => {
+      progress.tourSeen = true;
+      await setProgress(progress);
+    },
+  });
 }
 
 async function showPlayCount() {

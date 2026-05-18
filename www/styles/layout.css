@@ -398,3 +398,185 @@ body[data-screen="levels"] #screen-levels {
   align-self: center;
 }
 .parent-link:active { background: rgba(122, 29, 29, 0.08); }
+
+/* ----- intro help button ----- */
+.intro-help {
+  position: absolute;
+  top: max(env(safe-area-inset-top), 10px);
+  right: 10px;
+  width: 40px; height: 40px;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 26px; font-weight: 700;
+  background: rgba(255, 248, 225, 0.85);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  box-shadow: var(--shadow-press);
+  z-index: 5;
+}
+
+/* ----- tour overlay ----- */
+.tour-overlay {
+  position: fixed; inset: 0;
+  background: rgba(58, 31, 14, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  animation: tour-fade 220ms ease;
+}
+.tour-overlay[hidden] { display: none; }
+@keyframes tour-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.tour-card {
+  background: var(--parchment-light);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgba(58, 31, 14, 0.35);
+  padding: 18px 18px 14px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tour-stage {
+  height: 140px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(245, 222, 154, 0.35);
+  border: 1.5px dashed var(--gold);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+}
+.tour-title {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 28px; font-weight: 700;
+  color: var(--maroon);
+  margin: 2px 0 0;
+}
+.tour-body {
+  font-family: "Patrick Hand", "Caveat", cursive;
+  font-size: 18px;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  margin: 0 4px;
+}
+.tour-dots {
+  display: flex; justify-content: center; gap: 8px;
+  margin: 4px 0;
+}
+.tour-dots span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.4;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.tour-dots span.active {
+  opacity: 1;
+  transform: scale(1.3);
+  background: var(--maroon);
+}
+.tour-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+.tour-skip {
+  font-family: "Patrick Hand", "Caveat", cursive;
+  font-size: 17px;
+  color: var(--gold-deep);
+  padding: 8px 14px;
+  background: transparent;
+}
+.tour-skip:active { color: var(--maroon); }
+.tour-next {
+  font-size: 22px;
+  padding: 10px 24px;
+  min-height: 48px;
+  min-width: 130px;
+}
+
+/* ----- tour stage illustrations ----- */
+.tour-demo-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 22px;
+  min-width: 140px;
+  border-radius: var(--radius);
+  border: 2px solid;
+  box-shadow: var(--shadow-soft);
+  font-family: "Tiro Devanagari Sanskrit", "Sanskrit Text", serif;
+  font-size: 20px;
+}
+.tour-demo-tile .lbl {
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-size: 16px;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+.tour-demo-slot {
+  display: flex; align-items: center;
+  min-width: 160px;
+  min-height: 52px;
+  padding: 4px 10px 4px 4px;
+  background: var(--slot-empty);
+  border: 2px dashed var(--slot-border);
+  border-radius: var(--radius);
+}
+.tour-demo-slot .num {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 4px;
+  font-family: "Caveat", "Patrick Hand", cursive;
+  font-weight: 700; font-size: 20px;
+  color: var(--gold-deep);
+  background: rgba(255, 253, 240, 0.7);
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+}
+.tour-demo-finger {
+  position: absolute;
+  font-size: 30px;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.25));
+}
+
+/* Step 1: tile bobs with finger */
+.tour-stage.step-1 .tour-demo-tile {
+  background: var(--pp-1-bg); color: var(--pp-1-fg); border-color: var(--pp-1-border);
+  animation: tour-lift 1.6s ease-in-out infinite;
+}
+.tour-stage.step-1 .tour-demo-finger {
+  bottom: 18px; right: 70px;
+  animation: tour-finger 1.6s ease-in-out infinite;
+}
+@keyframes tour-lift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-10px, -8px) scale(1.05); box-shadow: 0 10px 22px rgba(58,31,14,0.28); }
+}
+@keyframes tour-finger {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-10px, -8px); }
+}
+
+/* Step 2: tile slides toward slot */
+.tour-stage.step-2 {
+  gap: 14px;
+}
+.tour-stage.step-2 .tour-demo-tile {
+  background: var(--pp-2-bg); color: var(--pp-2-fg); border-color: var(--pp-2-border);
+  animation: tour-slide 2s ease-in-out infinite;
+}
+@keyframes tour-slide {
+  0%   { transform: translateX(60px); opacity: 0.95; }
+  40%  { transform: translateX(0); opacity: 1; }
+  60%  { transform: translateX(0) scale(1.05); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+/* Step 3: small lotus opens */
+.tour-stage.step-3 .lotus-host {
+  width: 130px; aspect-ratio: 1; margin: 0;
+}

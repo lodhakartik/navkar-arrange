@@ -1,6 +1,6 @@
 {
   "appId": "com.jaingames.navkararrange",
-  "appName": "My First Navkar",
+  "appName": "Navkar Arrange",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
