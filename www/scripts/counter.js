@@ -1,7 +1,7 @@
 // Public play counter via counterapi.dev (free, no signup).
 // Counts each app open. Silent failure if API is unreachable.
 
-const BASE = "https://api.counterapi.dev/v1/lodhakartik/my-first-navkar";
+const BASE = "https://api.counterapi.dev/v1/lodhakartik/navkar-arrange";
 
 let bumpedThisSession = false;
 

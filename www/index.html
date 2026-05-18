@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#FFF8E7" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <title>My First Navkar</title>
+  <title>Navkar Arrange</title>
   <!-- Web-preview fonts (CDN). Native/offline falls back to local @font-face + system fonts. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,11 +19,12 @@
 
   <!-- ============ INTRO ============ -->
   <section id="screen-intro" class="screen">
+    <button id="btn-tour" class="icon-button intro-help" aria-label="How to play">?</button>
     <div class="intro-content">
       <h1 class="intro-title">
         <span class="om devanagari">ॐ</span>
         <span class="devanagari">नवकार मंत्र</span>
-        <span class="english">Navkar Mantra</span>
+        <span class="english">Navkar Arrange</span>
       </h1>
       <div id="intro-lotus" class="lotus-host"></div>
       <span class="lotus-caption" id="lotus-caption">Bloom the Lotus</span>
@@ -76,6 +77,20 @@
     <div class="level-grid" id="level-grid"></div>
     <a id="link-recorder" class="parent-link" href="recorder.html">🎙 Record your voice</a>
   </section>
+
+  <!-- ============ TOUR OVERLAY ============ -->
+  <div id="tour-overlay" class="tour-overlay" hidden aria-hidden="true" role="dialog" aria-label="How to play">
+    <div class="tour-card">
+      <div class="tour-stage" id="tour-stage"></div>
+      <h3 class="tour-title" id="tour-title"></h3>
+      <p class="tour-body" id="tour-body"></p>
+      <div class="tour-dots" id="tour-dots"></div>
+      <div class="tour-actions">
+        <button id="tour-skip" class="tour-skip">Skip</button>
+        <button id="tour-next" class="big-button tour-next">Next</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Audio pool — populated by audio.js at startup -->
   <div id="audio-pool" hidden></div>
